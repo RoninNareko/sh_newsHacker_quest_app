@@ -6,7 +6,8 @@ import {
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
-import { Comment } from "semantic-ui-react";
+import { Button, Comment } from "semantic-ui-react";
+import { MoreComent } from "./Components/MoreComent";
 
 export function MyComment({ commentID }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
@@ -35,21 +36,20 @@ export function MyComment({ commentID }: CommentPropsTypes) {
           moreCommentsFetchUrl
         );
         const { data } = commentData;
-        setMoreComments((prevState: [] | CommentType[]) => {
-          return [...prevState, data];
-        });
+        if (!moreComments.length) {
+          setMoreComments((prevState: [] | CommentType[]) => {
+            return [...prevState, data];
+          });
+        }
       });
     } catch (e) {
       console.log(e);
     }
   };
+
   return (
     <>
       <Comment.Group>
-        {/*<Header as="h3" dividing>*/}
-        {/*  Comments*/}
-        {/*</Header>*/}
-
         <Comment>
           <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg" />
           <Comment.Content>
@@ -63,26 +63,18 @@ export function MyComment({ commentID }: CommentPropsTypes) {
             <Comment.Actions>
               {comment?.kids && (
                 <Comment.Action>
-                  show more {comment?.kids.length}
+                  <Button onClick={LoadMoreComments}>
+                    {!moreComments.length
+                      ? `   Show answers (${comment?.kids.length})`
+                      : "Hide"}
+                  </Button>
                 </Comment.Action>
               )}
             </Comment.Actions>
           </Comment.Content>
-          {/*<Comment.Group>*/}
-          {/*  <Comment>*/}
-          {/*    <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/jenny.jpg" />*/}
-          {/*    <Comment.Content>*/}
-          {/*      <Comment.Author as="a">Jenny Hess</Comment.Author>*/}
-          {/*      <Comment.Metadata>*/}
-          {/*        <div>Just now</div>*/}
-          {/*      </Comment.Metadata>*/}
-          {/*      <Comment.Text>Elliot you are always so right :)</Comment.Text>*/}
-          {/*      <Comment.Actions>*/}
-          {/*        <Comment.Action>Reply</Comment.Action>*/}
-          {/*      </Comment.Actions>*/}
-          {/*    </Comment.Content>*/}
-          {/*  </Comment>*/}
-          {/*</Comment.Group>*/}
+          {moreComments.map((moreComent: CommentType) => {
+            return <MoreComent key={moreComent.id} moreComent={moreComent} />;
+          })}
         </Comment>
       </Comment.Group>
     </>

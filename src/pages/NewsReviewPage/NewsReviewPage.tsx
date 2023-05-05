@@ -4,6 +4,7 @@ import axios from "axios";
 import { newsItemUrl } from "../NewsPage/NewsPage.constants";
 import { useEffect, useState } from "react";
 import { MyComment } from "./Components/Comment";
+import {Header} from "semantic-ui-react";
 
 export function NewsReviewPage() {
   const [news, setNews] = useState<NewsType | undefined>(undefined);
@@ -36,7 +37,9 @@ export function NewsReviewPage() {
       <h1>{news.by}</h1>
       <h1>{news.url}</h1>
       <h1>{news.kids}</h1>
-
+      <Header as="h3" dividing>
+        Comments
+      </Header>
       {news.kids.map((commentID: number) => {
         return <MyComment commentID={commentID} />;
       })}
