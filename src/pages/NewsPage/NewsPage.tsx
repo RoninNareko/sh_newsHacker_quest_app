@@ -8,11 +8,16 @@ import {
 
 import { useEffect, useState } from "react";
 
+import classNames from "classnames/bind";
+import styles from "./NewsPage.module.scss";
+
 import axios from "axios";
 import { NewsDataType, NewsIdTypes, NewsType } from "./NewsPage.types";
 import News from "./components/News/News";
 
 export default function NewsPage() {
+  const cx = classNames.bind(styles);
+
   const [news, setNews] = useState<[] | NewsType[]>([]);
 
   const getNews = async () => {
@@ -27,7 +32,9 @@ export default function NewsPage() {
         const { data } = newsData;
 
         setNews((prevState: [] | NewsType[]) => {
-          return [...prevState, data];
+          return [...prevState, data].sort((a, b) => {
+            return a.time - b.time;
+          });
         });
       });
     } catch (e) {
@@ -40,10 +47,13 @@ export default function NewsPage() {
   }, []);
 
   return (
-    <List sx={news_list_sx}>
-      {news?.map((newsData: NewsType) => (
-        <News newsData={newsData} key={newsData.id} />
-      ))}
-    </List>
+    <section className={cx(styles.list)}>
+      <h3>News</h3>
+      <List sx={news_list_sx}>
+        {news?.map((newsData: NewsType) => (
+          <News newsData={newsData} key={newsData.id} />
+        ))}
+      </List>
+    </section>
   );
 }

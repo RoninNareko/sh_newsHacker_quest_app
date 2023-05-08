@@ -1,11 +1,11 @@
 import { Button, Comment } from "semantic-ui-react";
 import React, { useState } from "react";
-import { MoreCommentPropsTypes } from "./MoreComent.types";
+import { MoreCommentPropsTypes } from "./MoreComentOLD.types";
 import { newsItemUrl } from "../../../NewsPage/NewsPage.constants";
 import { CommentDataType, CommentType } from "../Comment.types";
 import axios from "axios";
 
-export function MoreComent({ moreComent }: MoreCommentPropsTypes) {
+export function MoreComentOld({ moreComent }: MoreCommentPropsTypes) {
   const [moreComments, setMoreComments] = useState<CommentType[] | []>([]);
   const LoadMoreComments = async () => {
     try {
@@ -50,7 +50,7 @@ export function MoreComent({ moreComent }: MoreCommentPropsTypes) {
         </Comment.Content>
 
         {moreComments.map((coment: CommentType) => (
-          <MoreComent key={coment.id} moreComent={coment} />
+          <MoreComentOld key={coment.id} moreComent={coment} />
         ))}
       </Comment>
     </Comment.Group>

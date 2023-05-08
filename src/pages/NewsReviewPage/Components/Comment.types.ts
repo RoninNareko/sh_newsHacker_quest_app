@@ -1,5 +1,6 @@
 export interface CommentPropsTypes {
-  commentID: number;
+  moreComent?:CommentType
+  commentID?:number
 }
 
 export interface CommentType {

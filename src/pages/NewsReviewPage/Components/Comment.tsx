@@ -7,13 +7,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
 import { Button, Comment } from "semantic-ui-react";
-import { MoreComent } from "./Components/MoreComent";
+import { mapTime } from "../../NewsPage/components/News/News.utils";
 
-export function MyComment({ commentID }: CommentPropsTypes) {
+export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
   const [moreComments, setMoreComments] = useState<CommentType[] | []>([]);
+  const [showMoreComments, setShowMoreComments] = useState<true | false>(false);
 
-  const getComments = async (commentID: number) => {
+  const getComment = async (commentID: number) => {
     try {
       const newsFetchUrl = `${newsItemUrl}${commentID}.json`;
       const commentData: CommentDataType = await axios.get(newsFetchUrl);
@@ -25,28 +26,49 @@ export function MyComment({ commentID }: CommentPropsTypes) {
   };
 
   useEffect(() => {
-    void getComments(commentID);
+    if (commentID) {
+      void getComment(commentID);
+    }
   }, [commentID]);
 
-  const LoadMoreComments = async () => {
+  const LoadMoreComments = async (more: boolean) => {
+    setShowMoreComments(!showMoreComments);
     try {
-      comment?.kids?.map(async (commentID: number) => {
-        const moreCommentsFetchUrl = `${newsItemUrl}${commentID}.json`;
-        const commentData: CommentDataType = await axios.get(
-          moreCommentsFetchUrl
-        );
-        const { data } = commentData;
-        if (!moreComments.length) {
+      if (more && !moreComments.length) {
+        moreComent?.kids?.map(async (commentID: number) => {
+          const moreCommentsFetchUrl = `${newsItemUrl}${commentID}.json`;
+          const commentData: CommentDataType = await axios.get(
+            moreCommentsFetchUrl
+          );
+          const { data } = commentData;
+
           setMoreComments((prevState: [] | CommentType[]) => {
-            return [...prevState, data];
+            return [...prevState, data].sort((a, b) => {
+              return a.time - b.time;
+            });
           });
-        }
-      });
+        });
+      } else {
+        comment?.kids?.map(async (commentID: number) => {
+          const moreCommentsFetchUrl = `${newsItemUrl}${commentID}.json`;
+          const commentData: CommentDataType = await axios.get(
+            moreCommentsFetchUrl
+          );
+          const { data } = commentData;
+          if (!moreComments.length) {
+            setMoreComments((prevState: [] | CommentType[]) => {
+              return [...prevState, data].sort((a, b) => {
+                return a.time - b.time;
+              });
+            });
+          }
+        });
+      }
     } catch (e) {
       console.log(e);
     }
   };
-
+  const convertTime: number = mapTime(comment?.time || moreComent?.time);
   return (
     <>
       <Comment.Group>
@@ -55,26 +77,41 @@ export function MyComment({ commentID }: CommentPropsTypes) {
           <Comment.Content>
             <Comment.Author as="a">{comment?.by}</Comment.Author>
             <Comment.Metadata>
-              <div>{comment?.time}</div>
+              <div>{convertTime} days ago</div>
             </Comment.Metadata>
             <Comment.Text>
-              <p>{comment?.text}</p>
+              <p>{comment?.text || moreComent?.text}</p>
             </Comment.Text>
             <Comment.Actions>
               {comment?.kids && (
                 <Comment.Action>
-                  <Button onClick={LoadMoreComments}>
+                  <Button onClick={() => LoadMoreComments(false)}>
                     {!moreComments.length
                       ? `   Show answers (${comment?.kids.length})`
                       : "Hide"}
                   </Button>
                 </Comment.Action>
               )}
+              {moreComent?.kids && (
+                <Comment.Action>
+                  <Button onClick={() => LoadMoreComments(true)}>
+                    {!moreComments.length
+                      ? `   Show answers more (${moreComent?.kids.length})`
+                      : "Hide"}
+                  </Button>
+                </Comment.Action>
+              )}
             </Comment.Actions>
           </Comment.Content>
-          {moreComments.map((moreComent: CommentType) => {
-            return <MoreComent key={moreComent.id} moreComent={moreComent} />;
-          })}
+          <section
+            style={{
+              display: showMoreComments ? "block" : "none",
+            }}
+          >
+            {moreComments.map((moreComent: CommentType) => {
+              return <MyComment key={moreComent?.id} moreComent={moreComent} />;
+            })}
+          </section>
         </Comment>
       </Comment.Group>
     </>

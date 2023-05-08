@@ -3,14 +3,16 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { NewsPropsTypes } from "./News.types";
 import { Link } from "react-router-dom";
+import { mapTime } from "./News.utils";
 
 export default function News({
   newsData: { id, score, by, time, kids, title },
 }: NewsPropsTypes) {
+  const convertTime: number = mapTime(time);
   const secondary = (
     <p>
       <b>{score}</b> points <b>by</b> {by}
-      <b> {time}</b> ago,
+      <b> {convertTime} days</b> ago,
       {kids?.length + 1 || 0} <b>comments</b>
     </p>
   );
