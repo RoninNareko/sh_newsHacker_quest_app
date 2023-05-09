@@ -1,6 +1,10 @@
-import { List } from "@mui/material";
+import { Button, List } from "@mui/material";
 import {
+  BUTTON_SIZE_MEDIUM,
+  BUTTON_VARIANT_CONTAINED,
+  LOADING_STATUS_TEXT,
   MAX_NEWS_COUNT,
+  NEWS_CLEAR_VALUE,
   news_list_sx,
   newsItemUrl,
   topStoriesUrl,
@@ -21,7 +25,7 @@ export default function NewsPage() {
 
   const [news, setNews] = useState<[] | NewsType[]>([]);
 
-  const getNews = async () => {
+  const getNews = async (refresh: true | false) => {
     try {
       const newsIdData: NewsIdTypes = await axios.get(topStoriesUrl);
 
@@ -48,14 +52,19 @@ export default function NewsPage() {
       console.log(e);
     }
   };
+  const updateNewsHandler = () => {
+    setNews(NEWS_CLEAR_VALUE);
+    void getNews(true);
+  };
   useEffect(() => {
-    void getNews();
+    setNews(NEWS_CLEAR_VALUE);
+    void getNews(false);
   }, []);
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
-      setNews([]);
-      void getNews();
+      setNews(NEWS_CLEAR_VALUE);
+      void getNews(false);
       return () => clearInterval(updateInterval);
     }, UPDATE_INTERVAL_TIME);
   }, []);
@@ -63,11 +72,22 @@ export default function NewsPage() {
   return (
     <section className={cx(styles.list)}>
       <h3>News</h3>
-      <List sx={news_list_sx}>
-        {news?.map((newsData: NewsType) => (
-          <News newsData={newsData} key={newsData.id} />
-        ))}
-      </List>
+      <Button
+        onClick={updateNewsHandler}
+        variant={BUTTON_VARIANT_CONTAINED}
+        size={BUTTON_SIZE_MEDIUM}
+      >
+        Update News
+      </Button>
+      {news && news.length ? (
+        <List sx={news_list_sx}>
+          {news?.map((newsData: NewsType) => (
+            <News newsData={newsData} key={newsData.id} />
+          ))}
+        </List>
+      ) : (
+        <h1>{LOADING_STATUS_TEXT}</h1>
+      )}
     </section>
   );
 }

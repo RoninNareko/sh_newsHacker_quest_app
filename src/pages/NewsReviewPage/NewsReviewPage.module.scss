@@ -1,16 +1,17 @@
-.myNlink{
+.myNlink {
   font-size: 20px !important;
   display: block;
   margin-top: 25px;
 }
-.newsPageCnt{
+
+.newsPageCnt {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
-.backButton{
+.backButton {
   display: flex !important;
   position: absolute !important;
   z-index: 10 !important;
@@ -19,3 +20,8 @@
   background: dimgrey !important;
   margin: 20px !important;
 }
+
+.title {
+  font-size: 30px !important;
+}
+

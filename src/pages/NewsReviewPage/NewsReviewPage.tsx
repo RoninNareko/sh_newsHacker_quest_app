@@ -74,7 +74,11 @@ export function NewsReviewPage() {
         {BACK_BUTTON_TEXT}
       </Button>
       <div>
-        <Typography variant={VARIANT_H1} component={VARIANT_H1}>
+        <Typography
+          className={cx(styles.title)}
+          variant={VARIANT_H1}
+          component={VARIANT_H1}
+        >
           {news.title}
         </Typography>
         <Typography variant={VARIANT_H3} component={VARIANT_H3}>
@@ -92,7 +96,7 @@ export function NewsReviewPage() {
         </Typography>
 
         <Header as={VARIANT_H4} dividing>
-          Comments {news?.kids.length && news.kids.length}
+          Comments {news?.kids?.length && news.kids.length}
         </Header>
         <Button
           onClick={updateCommentsHandler}
@@ -102,8 +106,8 @@ export function NewsReviewPage() {
           Update comments
         </Button>
         {!refresh ? (
-          news?.kids.length &&
-          news.kids.map((commentID: number) => {
+          news?.kids?.length &&
+          news?.kids?.map((commentID: number) => {
             return <UserComment key={commentID + 1} commentID={commentID} />;
           })
         ) : (
