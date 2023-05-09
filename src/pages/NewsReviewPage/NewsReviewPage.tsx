@@ -19,7 +19,7 @@ import {
   VARIANT_H3,
   VARIANT_H4,
 } from "./NewsReviewPage.constants";
-import { MyComment } from "./Components/Comment";
+import { UserComment } from "./Components/Comment";
 import { Header } from "semantic-ui-react";
 
 export function NewsReviewPage() {
@@ -104,7 +104,7 @@ export function NewsReviewPage() {
         {!refresh ? (
           news?.kids.length &&
           news.kids.map((commentID: number) => {
-            return <MyComment key={commentID + 1} commentID={commentID} />;
+            return <UserComment key={commentID + 1} commentID={commentID} />;
           })
         ) : (
           <h1>{REFRESH_STATUS_TEXT}</h1>

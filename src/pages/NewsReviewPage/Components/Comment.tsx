@@ -9,7 +9,7 @@ import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
 import { Button, Comment } from "semantic-ui-react";
 import { HIDE_COMMENT_BUTTON_TEXT } from "./Comment.constants";
 
-export function MyComment({ commentID, moreComment }: CommentPropsTypes) {
+export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
   const [moreComments, setMoreComments] = useState<CommentType[] | []>([]);
   const [showMoreComments, setShowMoreComments] = useState<true | false>(false);
@@ -110,7 +110,7 @@ export function MyComment({ commentID, moreComment }: CommentPropsTypes) {
           >
             {moreComments.map((moreComment: CommentType) => {
               return (
-                <MyComment key={moreComment?.id} moreComment={moreComment} />
+                <UserComment key={moreComment?.id} moreComment={moreComment} />
               );
             })}
           </section>
