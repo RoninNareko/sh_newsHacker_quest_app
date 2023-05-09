@@ -13,7 +13,6 @@ import {
   BUTTON_VARIANT_CONTAINED,
   INDEX_PAGE_URL,
   LINK_UNDERLINE,
-  LOADING_STATUS_TEXT,
   REFRESH_STATUS_TEXT,
   VARIANT_H1,
   VARIANT_H3,
@@ -25,11 +24,12 @@ import { Header } from "semantic-ui-react";
 export function NewsReviewPage() {
   const navigatie = useNavigate();
   const [news, setNews] = useState<NewsType | undefined>(undefined);
-  const [refresh, setRefresh] = useState<false | true>(false);
+  const [commentsLoading, setCommentsLoading] = useState<true | false>(false);
   const cx = classNames.bind(styles);
   const { newsId } = useParams();
 
   const fetchData = async () => {
+    setCommentsLoading(true);
     try {
       const newsData: NewsDataType = await axios.get(
         `${newsItemUrl}${newsId}.json`
@@ -37,27 +37,25 @@ export function NewsReviewPage() {
 
       const { data } = newsData;
       data.time = new Date(data.time);
+
       if (data) {
         setNews(data);
-        setRefresh(false);
+        setCommentsLoading(false);
       }
     } catch (e) {
       console.log(e);
     }
   };
+
   const getData = useCallback(fetchData, [newsId]);
+
   const updateCommentsHandler = () => {
-    setRefresh(true);
     void fetchData();
   };
 
   const goBack = () => {
     navigatie(INDEX_PAGE_URL);
   };
-
-  useEffect(() => {
-    void getData();
-  }, [refresh, getData]);
 
   useEffect(() => {
     void getData();
@@ -105,7 +103,7 @@ export function NewsReviewPage() {
         >
           Update comments
         </Button>
-        {!refresh ? (
+        {!commentsLoading ? (
           news?.kids?.length &&
           news?.kids?.map((commentID: number) => {
             return <UserComment key={commentID + 1} commentID={commentID} />;
@@ -115,7 +113,5 @@ export function NewsReviewPage() {
         )}
       </div>
     </section>
-  ) : (
-    <h1>{LOADING_STATUS_TEXT}</h1>
-  );
+  ) : null;
 }

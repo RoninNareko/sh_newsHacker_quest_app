@@ -4,7 +4,6 @@ import {
   BUTTON_VARIANT_CONTAINED,
   LOADING_STATUS_TEXT,
   MAX_NEWS_COUNT,
-  NEWS_CLEAR_VALUE,
   news_list_sx,
   newsItemUrl,
   topStoriesUrl,
@@ -24,8 +23,10 @@ export default function NewsPage() {
   const cx = classNames.bind(styles);
 
   const [news, setNews] = useState<[] | NewsType[]>([]);
+  const [loading, setLoading] = useState<true | false>(false);
 
   const getNews = async () => {
+    setLoading(true);
     try {
       const newsIdData: NewsIdTypes = await axios.get(topStoriesUrl);
 
@@ -42,28 +43,30 @@ export default function NewsPage() {
           newNews.forEach((news) => {
             return (news.time = new Date(news.time));
           });
+
           newNews.sort((a: NewsType, b: NewsType) => {
             return new Date(a.time).getTime() - new Date(b.time).getTime();
           });
+
           return newNews;
         });
       });
+      setLoading(false);
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
   const updateNewsHandler = () => {
-    setNews(NEWS_CLEAR_VALUE);
     void getNews();
   };
+
   useEffect(() => {
-    setNews(NEWS_CLEAR_VALUE);
     void getNews();
   }, []);
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
-      setNews(NEWS_CLEAR_VALUE);
       void getNews();
       return () => clearInterval(updateInterval);
     }, UPDATE_INTERVAL_TIME);
@@ -79,7 +82,7 @@ export default function NewsPage() {
       >
         Update News
       </Button>
-      {news && news.length ? (
+      {news && !loading ? (
         <List sx={news_list_sx}>
           {news?.map((newsData: NewsType) => (
             <News newsData={newsData} key={newsData.id} />

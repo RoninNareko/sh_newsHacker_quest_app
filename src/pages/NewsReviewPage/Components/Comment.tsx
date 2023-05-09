@@ -13,7 +13,6 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
   const [moreComments, setMoreComments] = useState<CommentType[] | []>([]);
   const [showMoreComments, setShowMoreComments] = useState<true | false>(false);
-
   const getComment = async (commentID: number) => {
     try {
       const newsFetchUrl = `${newsItemUrl}${commentID}.json`;
