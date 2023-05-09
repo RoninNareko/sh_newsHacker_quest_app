@@ -8,7 +8,7 @@ export interface NewsType {
   id: number;
   kids: number[] | [];
   score: number;
-  time: number;
+  time: Date;
   title: string;
   type: string;
   url: string;

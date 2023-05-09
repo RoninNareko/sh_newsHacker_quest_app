@@ -1,16 +1,29 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { NewsDataType, NewsType } from "../NewsPage/NewsPage.types";
 import axios from "axios";
 import { newsItemUrl } from "../NewsPage/NewsPage.constants";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MyComment } from "./Components/Comment";
 import { Header } from "semantic-ui-react";
 import classNames from "classnames/bind";
 import styles from "./NewsReviewPage.module.scss";
 import { Button, Link, Typography } from "@mui/material";
-import { mapTime } from "../NewsPage/components/News/News.utils";
+
+import {
+  BACK_BUTTON_TEXT,
+  BUTTON_SIZE_MEDIUM,
+  BUTTON_VARIANT_CONTAINED,
+  INDEX_PAGE_URL,
+  LINK_UNDERLINE,
+  LOADING_STATUS_TEXT,
+  REFRESH_STATUS_TEXT,
+  VARIANT_H1,
+  VARIANT_H3,
+  VARIANT_H4,
+} from "./NewsReviewPage.constants";
 
 export function NewsReviewPage() {
+  const navigatie = useNavigate();
   const [news, setNews] = useState<NewsType | undefined>(undefined);
   const [refresh, setRefresh] = useState<false | true>(false);
   const cx = classNames.bind(styles);
@@ -32,43 +45,59 @@ export function NewsReviewPage() {
       console.log(e);
     }
   };
-
+  const getData = useCallback(fetchData, [newsId]);
   const updateCommentsHandler = () => {
     setRefresh(true);
     void fetchData();
   };
+
+  const goBack = () => {
+    navigatie(INDEX_PAGE_URL);
+  };
+
   useEffect(() => {
-    void fetchData();
-  }, [refresh, fetchData]);
+    void getData();
+  }, [refresh, getData]);
+
   useEffect(() => {
-    void fetchData();
-  }, [fetchData]);
+    void getData();
+  }, [getData]);
+
   return news ? (
     <section className={cx(styles.newsPageCnt)}>
-      <Button variant="contained" size="medium">
-        {`${"<Back to news"}`}
+      <Button
+        className={cx(styles.backButton)}
+        variant={BUTTON_VARIANT_CONTAINED}
+        onClick={goBack}
+        size={BUTTON_SIZE_MEDIUM}
+      >
+        {BACK_BUTTON_TEXT}
       </Button>
       <div>
-        <Typography variant="h1" component="h1">
+        <Typography variant={VARIANT_H1} component={VARIANT_H1}>
           {news.title}
         </Typography>
-        <Typography variant="h3" component="h3">
+        <Typography variant={VARIANT_H3} component={VARIANT_H3}>
           by: {news.by}
         </Typography>
-        <Link className={cx(styles.myNlink)} href="#" underline="always">
+        <Link
+          className={cx(styles.myNlink)}
+          href={news.url}
+          underline={LINK_UNDERLINE}
+        >
           {news.url}
         </Link>
-        <Typography variant="h4" component="h4">
-          date: {`${mapTime(news.time)} days ago`}
+        <Typography variant={VARIANT_H4} component={VARIANT_H4}>
+          {/*date: {`${mapTime(news.time)} days ago`}*/}
         </Typography>
 
-        <Header as="h3" dividing>
+        <Header as={VARIANT_H4} dividing>
           Comments {news.kids.length}
         </Header>
         <Button
           onClick={updateCommentsHandler}
-          variant="contained"
-          size="medium"
+          variant={BUTTON_VARIANT_CONTAINED}
+          size={BUTTON_SIZE_MEDIUM}
         >
           Update comments
         </Button>
@@ -77,11 +106,11 @@ export function NewsReviewPage() {
             return <MyComment key={commentID + 1} commentID={commentID} />;
           })
         ) : (
-          <h1>refresh...</h1>
+          <h1>{REFRESH_STATUS_TEXT}</h1>
         )}
       </div>
     </section>
   ) : (
-    <h1>Loading...</h1>
+    <h1>{LOADING_STATUS_TEXT}</h1>
   );
 }

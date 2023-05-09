@@ -1,6 +1,6 @@
 export interface CommentPropsTypes {
-  moreComent?:CommentType
-  commentID?:number
+  moreComent?: CommentType;
+  commentID?: number;
 }
 
 export interface CommentType {
@@ -11,7 +11,7 @@ export interface CommentType {
   parent: number;
   kids: number[] | undefined | [];
   text: string;
-  time: number;
+  time: Date;
 
   type: string;
 }

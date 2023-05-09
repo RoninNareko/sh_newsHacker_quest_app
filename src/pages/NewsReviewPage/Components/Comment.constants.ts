@@ -1,1 +1,1 @@
-export const newsCommentsUrl = "https://hacker-news.firebaseio.com/v0/item/";
+export const HIDE_COMMENT_BUTTON_TEXT = "Hide";

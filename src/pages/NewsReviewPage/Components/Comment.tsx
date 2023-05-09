@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
 import { Button, Comment } from "semantic-ui-react";
-import { mapTime } from "../../NewsPage/components/News/News.utils";
+import { HIDE_COMMENT_BUTTON_TEXT } from "./Comment.constants";
 
 export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
@@ -19,6 +19,7 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
       const newsFetchUrl = `${newsItemUrl}${commentID}.json`;
       const commentData: CommentDataType = await axios.get(newsFetchUrl);
       const { data } = commentData;
+      data.time = new Date(data.time);
       setComment(data);
     } catch (e) {
       console.log(e);
@@ -31,44 +32,39 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
     }
   }, [commentID]);
 
+  const setComments = async (commentID: number) => {
+    const moreCommentsFetchUrl = `${newsItemUrl}${commentID}.json`;
+    const commentData: CommentDataType = await axios.get(moreCommentsFetchUrl);
+    const { data } = commentData;
+
+    setMoreComments((prevState: [] | CommentType[]) => {
+      const newComments = [...prevState, data];
+
+      newComments.forEach((coment) => {
+        return (coment.time = new Date(coment.time));
+      });
+
+      newComments.sort((a: CommentType, b: CommentType) => {
+        return new Date(a.time).getTime() - new Date(b.time).getTime();
+      });
+
+      return newComments;
+    });
+  };
+
   const LoadMoreComments = async (more: boolean) => {
     setShowMoreComments(!showMoreComments);
     try {
       if (more && !moreComments.length) {
-        moreComent?.kids?.map(async (commentID: number) => {
-          const moreCommentsFetchUrl = `${newsItemUrl}${commentID}.json`;
-          const commentData: CommentDataType = await axios.get(
-            moreCommentsFetchUrl
-          );
-          const { data } = commentData;
-
-          setMoreComments((prevState: [] | CommentType[]) => {
-            return [...prevState, data].sort((a, b) => {
-              return a.time - b.time;
-            });
-          });
-        });
+        moreComent?.kids?.map(setComments);
       } else {
-        comment?.kids?.map(async (commentID: number) => {
-          const moreCommentsFetchUrl = `${newsItemUrl}${commentID}.json`;
-          const commentData: CommentDataType = await axios.get(
-            moreCommentsFetchUrl
-          );
-          const { data } = commentData;
-          if (!moreComments.length) {
-            setMoreComments((prevState: [] | CommentType[]) => {
-              return [...prevState, data].sort((a, b) => {
-                return a.time - b.time;
-              });
-            });
-          }
-        });
+        comment?.kids?.map(setComments);
       }
     } catch (e) {
       console.log(e);
     }
   };
-  const convertTime: number = mapTime(comment?.time || moreComent?.time);
+
   return (
     <>
       <Comment.Group>
@@ -77,7 +73,11 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
           <Comment.Content>
             <Comment.Author as="a">{comment?.by}</Comment.Author>
             <Comment.Metadata>
-              <div>{convertTime} days ago</div>
+              <div>
+                {comment
+                  ? comment.time.toTimeString()
+                  : moreComent && moreComent.time.toTimeString()}
+              </div>
             </Comment.Metadata>
             <Comment.Text>
               <p>{comment?.text || moreComent?.text}</p>
@@ -86,18 +86,18 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
               {comment?.kids && (
                 <Comment.Action>
                   <Button onClick={() => LoadMoreComments(false)}>
-                    {!moreComments.length
-                      ? `   Show answers (${comment?.kids.length})`
-                      : "Hide"}
+                    {moreComments.length && showMoreComments
+                      ? HIDE_COMMENT_BUTTON_TEXT
+                      : `Show answers (${comment?.kids.length})`}
                   </Button>
                 </Comment.Action>
               )}
               {moreComent?.kids && (
                 <Comment.Action>
                   <Button onClick={() => LoadMoreComments(true)}>
-                    {!moreComments.length
-                      ? `   Show answers more (${moreComent?.kids.length})`
-                      : "Hide"}
+                    {moreComments.length && showMoreComments
+                      ? HIDE_COMMENT_BUTTON_TEXT
+                      : `Show answers (${moreComent?.kids.length})`}
                   </Button>
                 </Comment.Action>
               )}
@@ -108,8 +108,10 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
               display: showMoreComments ? "block" : "none",
             }}
           >
-            {moreComments.map((moreComent: CommentType) => {
-              return <MyComment key={moreComent?.id} moreComent={moreComent} />;
+            {moreComments.map((moreComment: CommentType) => {
+              return (
+                <MyComment key={moreComment?.id} moreComent={moreComment} />
+              );
             })}
           </section>
         </Comment>

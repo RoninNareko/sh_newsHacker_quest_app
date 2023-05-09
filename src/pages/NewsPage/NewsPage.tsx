@@ -32,16 +32,25 @@ export default function NewsPage() {
         const { data } = newsData;
 
         setNews((prevState: [] | NewsType[]) => {
-          return [...prevState, data].sort((a, b) => {
-            return a.time - b.time;
+          const newNews = [...prevState, data];
+
+          newNews.forEach((news) => {
+            return (news.time = new Date(news.time));
           });
+          newNews.sort((a: NewsType, b: NewsType) => {
+            return new Date(a.time).getTime() - new Date(b.time).getTime();
+          });
+          return newNews;
         });
       });
     } catch (e) {
       console.log(e);
     }
   };
-
+  // news.sort((a: NewsType, b: NewsType) => {
+  //   //@ts-ignore
+  //   return new Date(b.time) - new Date(a.time);
+  // });
   useEffect(() => {
     void getNews();
   }, []);
