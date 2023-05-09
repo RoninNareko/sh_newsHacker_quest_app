@@ -47,10 +47,6 @@ export default function NewsPage() {
       console.log(e);
     }
   };
-  // news.sort((a: NewsType, b: NewsType) => {
-  //   //@ts-ignore
-  //   return new Date(b.time) - new Date(a.time);
-  // });
   useEffect(() => {
     void getNews();
   }, []);

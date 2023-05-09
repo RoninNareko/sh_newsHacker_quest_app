@@ -3,8 +3,6 @@ import { NewsDataType, NewsType } from "../NewsPage/NewsPage.types";
 import axios from "axios";
 import { newsItemUrl } from "../NewsPage/NewsPage.constants";
 import { useCallback, useEffect, useState } from "react";
-import { MyComment } from "./Components/Comment";
-import { Header } from "semantic-ui-react";
 import classNames from "classnames/bind";
 import styles from "./NewsReviewPage.module.scss";
 import { Button, Link, Typography } from "@mui/material";
@@ -21,6 +19,8 @@ import {
   VARIANT_H3,
   VARIANT_H4,
 } from "./NewsReviewPage.constants";
+import { MyComment } from "./Components/Comment";
+import { Header } from "semantic-ui-react";
 
 export function NewsReviewPage() {
   const navigatie = useNavigate();
@@ -36,7 +36,7 @@ export function NewsReviewPage() {
       );
 
       const { data } = newsData;
-
+      data.time = new Date(data.time);
       if (data) {
         setNews(data);
         setRefresh(false);
@@ -88,11 +88,11 @@ export function NewsReviewPage() {
           {news.url}
         </Link>
         <Typography variant={VARIANT_H4} component={VARIANT_H4}>
-          {/*date: {`${mapTime(news.time)} days ago`}*/}
+          date: {news.time.toTimeString()}
         </Typography>
 
         <Header as={VARIANT_H4} dividing>
-          Comments {news.kids.length}
+          Comments {news?.kids.length && news.kids.length}
         </Header>
         <Button
           onClick={updateCommentsHandler}
@@ -102,6 +102,7 @@ export function NewsReviewPage() {
           Update comments
         </Button>
         {!refresh ? (
+          news?.kids.length &&
           news.kids.map((commentID: number) => {
             return <MyComment key={commentID + 1} commentID={commentID} />;
           })

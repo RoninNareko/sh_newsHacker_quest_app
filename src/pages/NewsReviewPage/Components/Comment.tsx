@@ -9,7 +9,7 @@ import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
 import { Button, Comment } from "semantic-ui-react";
 import { HIDE_COMMENT_BUTTON_TEXT } from "./Comment.constants";
 
-export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
+export function MyComment({ commentID, moreComment }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
   const [moreComments, setMoreComments] = useState<CommentType[] | []>([]);
   const [showMoreComments, setShowMoreComments] = useState<true | false>(false);
@@ -56,7 +56,7 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
     setShowMoreComments(!showMoreComments);
     try {
       if (more && !moreComments.length) {
-        moreComent?.kids?.map(setComments);
+        moreComment?.kids?.map(setComments);
       } else {
         comment?.kids?.map(setComments);
       }
@@ -76,11 +76,11 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
               <div>
                 {comment
                   ? comment.time.toTimeString()
-                  : moreComent && moreComent.time.toTimeString()}
+                  : moreComment && moreComment.time.toTimeString()}
               </div>
             </Comment.Metadata>
             <Comment.Text>
-              <p>{comment?.text || moreComent?.text}</p>
+              <p>{comment?.text || moreComment?.text}</p>
             </Comment.Text>
             <Comment.Actions>
               {comment?.kids && (
@@ -92,12 +92,12 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
                   </Button>
                 </Comment.Action>
               )}
-              {moreComent?.kids && (
+              {moreComment?.kids && (
                 <Comment.Action>
                   <Button onClick={() => LoadMoreComments(true)}>
                     {moreComments.length && showMoreComments
                       ? HIDE_COMMENT_BUTTON_TEXT
-                      : `Show answers (${moreComent?.kids.length})`}
+                      : `Show answers (${moreComment?.kids.length})`}
                   </Button>
                 </Comment.Action>
               )}
@@ -110,7 +110,7 @@ export function MyComment({ commentID, moreComent }: CommentPropsTypes) {
           >
             {moreComments.map((moreComment: CommentType) => {
               return (
-                <MyComment key={moreComment?.id} moreComent={moreComment} />
+                <MyComment key={moreComment?.id} moreComment={moreComment} />
               );
             })}
           </section>
