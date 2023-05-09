@@ -4,6 +4,7 @@ import {
   news_list_sx,
   newsItemUrl,
   topStoriesUrl,
+  UPDATE_INTERVAL_TIME,
 } from "./NewsPage.constants";
 
 import { useEffect, useState } from "react";
@@ -49,6 +50,14 @@ export default function NewsPage() {
   };
   useEffect(() => {
     void getNews();
+  }, []);
+
+  useEffect(() => {
+    const updateInterval = setInterval(() => {
+      setNews([]);
+      void getNews();
+      return () => clearInterval(updateInterval);
+    }, UPDATE_INTERVAL_TIME);
   }, []);
 
   return (
