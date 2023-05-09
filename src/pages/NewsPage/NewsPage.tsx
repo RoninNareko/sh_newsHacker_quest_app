@@ -25,7 +25,7 @@ export default function NewsPage() {
 
   const [news, setNews] = useState<[] | NewsType[]>([]);
 
-  const getNews = async (refresh: true | false) => {
+  const getNews = async () => {
     try {
       const newsIdData: NewsIdTypes = await axios.get(topStoriesUrl);
 
@@ -54,17 +54,17 @@ export default function NewsPage() {
   };
   const updateNewsHandler = () => {
     setNews(NEWS_CLEAR_VALUE);
-    void getNews(true);
+    void getNews();
   };
   useEffect(() => {
     setNews(NEWS_CLEAR_VALUE);
-    void getNews(false);
+    void getNews();
   }, []);
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
       setNews(NEWS_CLEAR_VALUE);
-      void getNews(false);
+      void getNews();
       return () => clearInterval(updateInterval);
     }, UPDATE_INTERVAL_TIME);
   }, []);
