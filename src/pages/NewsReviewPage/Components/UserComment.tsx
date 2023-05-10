@@ -38,7 +38,7 @@ export default function UserComment({
 
   useEffect(() => {
     if (commentID) {
-      getComment(commentID).catch((e) => console.log(e));
+      getComment(commentID);
     }
   }, [commentID]);
 

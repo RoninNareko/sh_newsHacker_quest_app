@@ -26,7 +26,7 @@ export default function NewsPage() {
 
   const cx = classNames.bind(styles);
 
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     setLoading(true);
     setNews(CLEAR_VALUE);
 
@@ -59,28 +59,24 @@ export default function NewsPage() {
       setLoading(false);
       console.log(e);
     }
-  };
-
-  const getNews = useCallback(() => {
-    fetchNews().catch((e) => console.log(e));
   }, []);
 
   useEffect(() => {
-    getNews();
-  }, [getNews]);
+    fetchNews();
+  }, [fetchNews]);
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
-      getNews();
+      fetchNews();
       return () => clearInterval(updateInterval);
     }, UPDATE_INTERVAL_TIME);
-  }, [getNews]);
+  }, [fetchNews]);
 
   return (
     <section className={cx(styles.list)}>
       <h3>News</h3>
       <Button
-        onClick={getNews}
+        onClick={fetchNews}
         variant={BUTTON_VARIANT_CONTAINED}
         size={BUTTON_SIZE_MEDIUM}
       >

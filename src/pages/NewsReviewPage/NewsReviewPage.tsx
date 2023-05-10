@@ -51,21 +51,13 @@ export default function NewsReviewPage() {
     }
   }, [newsId]);
 
-  const getData = useCallback(() => {
-    fetchData().catch((e) => console.log(e));
-  }, [fetchData]);
-
-  const updateCommentsHandler = () => {
-    getData();
-  };
-
   const goBack = () => {
     navigate(INDEX_PAGE_URL);
   };
 
   useEffect(() => {
-    getData();
-  }, [getData]);
+    fetchData();
+  }, [fetchData]);
 
   return news ? (
     <section className={cx(styles.newsPageCnt)}>
@@ -103,7 +95,7 @@ export default function NewsReviewPage() {
           Comments {news?.kids?.length && news.kids.length}
         </Header>
         <Button
-          onClick={updateCommentsHandler}
+          onClick={fetchData}
           variant={BUTTON_VARIANT_CONTAINED}
           size={BUTTON_SIZE_MEDIUM}
         >
