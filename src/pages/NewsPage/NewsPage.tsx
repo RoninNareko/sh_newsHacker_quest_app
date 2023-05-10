@@ -60,6 +60,7 @@ export default function NewsPage() {
       console.log(e);
     }
   };
+
   const updateNewsHandler = () => {
     void getNews();
   };
