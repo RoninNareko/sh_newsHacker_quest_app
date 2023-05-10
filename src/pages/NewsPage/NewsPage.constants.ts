@@ -8,7 +8,7 @@ export const topStoriesUrl =
 
 export const newsItemUrl = "https://hacker-news.firebaseio.com/v0/item/";
 
-export const MAX_NEWS_COUNT = 10;
+export const MAX_NEWS_COUNT = 100;
 
 export const UPDATE_INTERVAL_TIME = 60000;
 

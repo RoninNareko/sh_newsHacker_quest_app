@@ -24,7 +24,7 @@ export default function NewsPage() {
 
   const [news, setNews] = useState<[] | NewsType[]>([]);
   const [loading, setLoading] = useState<true | false>(false);
-
+  console.log(news);
   const getNews = async () => {
     setLoading(true);
     try {
@@ -36,19 +36,17 @@ export default function NewsPage() {
         const newsData: NewsDataType = await axios.get(newsFetchUrl);
 
         const { data } = newsData;
-
+        data.time = new Date(+data.time * 1000);
         setNews((prevState: [] | NewsType[]) => {
-          const newNews = [...prevState, data];
+          const found = prevState.find((el) => el.id === data.id);
 
-          newNews.forEach((news) => {
-            return (news.time = new Date(news.time));
-          });
+          if (!found) {
+            return [...prevState, data].sort((a, b) => {
+              return new Date(a.time).getTime() - new Date(b.time).getTime();
+            });
+          }
 
-          newNews.sort((a: NewsType, b: NewsType) => {
-            return new Date(a.time).getTime() - new Date(b.time).getTime();
-          });
-
-          return newNews;
+          return prevState;
         });
       });
       setLoading(false);

@@ -36,8 +36,9 @@ export function NewsReviewPage() {
       );
 
       const { data } = newsData;
-      data.time = new Date(data.time);
-
+      console.log(data.time);
+      data.time = new Date(+data.time * 1000);
+      console.log(data.time, "heto");
       if (data) {
         setNews(data);
         setCommentsLoading(false);
@@ -90,7 +91,7 @@ export function NewsReviewPage() {
           {news.url}
         </Link>
         <Typography variant={VARIANT_H4} component={VARIANT_H4}>
-          date: {news.time.toTimeString()}
+          date: {news.time.toLocaleString()}
         </Typography>
 
         <Header as={VARIANT_H4} dividing>
