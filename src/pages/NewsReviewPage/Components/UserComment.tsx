@@ -4,7 +4,7 @@ import {
   CommentDataType,
   CommentPropsTypes,
   CommentType,
-} from "./Comment.types";
+} from "./UserComment.types";
 
 import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
 import { Button, Comment } from "semantic-ui-react";
@@ -12,9 +12,12 @@ import {
   CLEAR_VALUE,
   COMMENT_IMAGE_URL,
   HIDE_COMMENT_BUTTON_TEXT,
-} from "./Comment.constants";
+} from "./UserComment.constants";
 
-export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
+export default function UserComment({
+  commentID,
+  moreComment,
+}: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
   const [moreComments, setMoreComments] = useState<CommentType[] | []>([]);
   const [showMoreComments, setShowMoreComments] = useState<true | false>(false);

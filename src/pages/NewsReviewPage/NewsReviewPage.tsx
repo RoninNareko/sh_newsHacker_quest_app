@@ -19,10 +19,10 @@ import {
   VARIANT_H4,
 } from "./NewsReviewPage.constants";
 
-import { UserComment } from "./Components/Comment";
+import UserComment from "./Components/UserComment";
 import { Header } from "semantic-ui-react";
 
-export function NewsReviewPage() {
+export default function NewsReviewPage() {
   const [news, setNews] = useState<NewsType | undefined>(undefined);
   const [commentsLoading, setCommentsLoading] = useState<true | false>(false);
 
