@@ -24,7 +24,7 @@ export default function NewsPage() {
 
   const [news, setNews] = useState<[] | NewsType[]>([]);
   const [loading, setLoading] = useState<true | false>(false);
-  console.log(news);
+
   const getNews = async () => {
     setLoading(true);
     try {

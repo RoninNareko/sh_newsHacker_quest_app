@@ -36,9 +36,9 @@ export function NewsReviewPage() {
       );
 
       const { data } = newsData;
-      console.log(data.time);
+
       data.time = new Date(Number(data.time) * 1000);
-      console.log(data.time, "heto");
+
       if (data) {
         setNews(data);
         setCommentsLoading(false);
