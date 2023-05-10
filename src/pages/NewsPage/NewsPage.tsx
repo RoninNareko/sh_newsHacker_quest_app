@@ -36,7 +36,7 @@ export default function NewsPage() {
         const newsData: NewsDataType = await axios.get(newsFetchUrl);
 
         const { data } = newsData;
-        data.time = new Date(+data.time * 1000);
+        data.time = new Date(Number(data.time) * 1000);
         setNews((prevState: [] | NewsType[]) => {
           const found = prevState.find((el) => el.id === data.id);
 

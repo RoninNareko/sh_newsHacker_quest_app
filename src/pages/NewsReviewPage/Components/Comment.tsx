@@ -13,12 +13,13 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
   const [moreComments, setMoreComments] = useState<CommentType[] | []>([]);
   const [showMoreComments, setShowMoreComments] = useState<true | false>(false);
+
   const getComment = async (commentID: number) => {
     try {
       const newsFetchUrl = `${newsItemUrl}${commentID}.json`;
       const commentData: CommentDataType = await axios.get(newsFetchUrl);
       const { data } = commentData;
-      data.time = new Date(data.time);
+      data.time = new Date(Number(data.time) * 1000);
       setComment(data);
     } catch (e) {
       console.log(e);
@@ -40,11 +41,7 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
       const newComments = [...prevState, data];
 
       newComments.forEach((coment) => {
-        return (coment.time = new Date(coment.time));
-      });
-
-      newComments.sort((a: CommentType, b: CommentType) => {
-        return new Date(a.time).getTime() - new Date(b.time).getTime();
+        return (coment.time = new Date(Number(coment.time) * 1000));
       });
 
       return newComments;
@@ -74,8 +71,8 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
             <Comment.Metadata>
               <div>
                 {comment
-                  ? comment.time.toTimeString()
-                  : moreComment && moreComment.time.toTimeString()}
+                  ? comment.time.toLocaleString()
+                  : moreComment && moreComment.time.toLocaleString()}
               </div>
             </Comment.Metadata>
             <Comment.Text>
