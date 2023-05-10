@@ -31,7 +31,7 @@ export default function NewsReviewPage() {
 
   const cx = classNames.bind(styles);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setCommentsLoading(true);
     try {
       const newsData: NewsDataType = await axios.get(
@@ -40,7 +40,7 @@ export default function NewsReviewPage() {
 
       const { data } = newsData;
 
-      data.time = new Date(Number(data.time) * 1000);
+      data.time = new Date(Number(data.time));
 
       if (data) {
         setNews(data);
@@ -49,12 +49,14 @@ export default function NewsReviewPage() {
     } catch (e) {
       console.log(e);
     }
-  };
+  }, [newsId]);
 
-  const getData = useCallback(fetchData, [newsId]);
+  const getData = useCallback(() => {
+    fetchData().catch((e) => console.log(e));
+  }, [fetchData]);
 
   const updateCommentsHandler = () => {
-    void fetchData();
+    getData();
   };
 
   const goBack = () => {
@@ -62,7 +64,7 @@ export default function NewsReviewPage() {
   };
 
   useEffect(() => {
-    void getData();
+    getData();
   }, [getData]);
 
   return news ? (

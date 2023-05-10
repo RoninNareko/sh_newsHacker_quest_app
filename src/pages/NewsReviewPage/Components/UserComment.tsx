@@ -28,7 +28,7 @@ export default function UserComment({
       const commentData: CommentDataType = await axios.get(newsFetchUrl);
 
       const { data } = commentData;
-      data.time = new Date(Number(data.time) * 1000);
+      data.time = new Date(Number(data.time));
 
       setComment(data);
     } catch (e) {
@@ -38,7 +38,7 @@ export default function UserComment({
 
   useEffect(() => {
     if (commentID) {
-      void getComment(commentID);
+      getComment(commentID).catch((e) => console.log(e));
     }
   }, [commentID]);
 
@@ -52,7 +52,7 @@ export default function UserComment({
       const newComments = [...prevState, data];
 
       newComments.forEach((coment) => {
-        return (coment.time = new Date(Number(coment.time) * 1000));
+        return (coment.time = new Date(Number(coment.time)));
       });
 
       return newComments;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Button, List } from "@mui/material";
 import {
@@ -26,7 +26,7 @@ export default function NewsPage() {
 
   const cx = classNames.bind(styles);
 
-  const getNews = async () => {
+  const fetchNews = async () => {
     setLoading(true);
     setNews(CLEAR_VALUE);
 
@@ -39,7 +39,7 @@ export default function NewsPage() {
         const newsData: NewsDataType = await axios.get(newsFetchUrl);
 
         const { data } = newsData;
-        data.time = new Date(Number(data.time) * 1000);
+        data.time = new Date(Number(data.time));
 
         setNews((prevState: [] | NewsType[]) => {
           const found = prevState.find((el) => el.id === data.id);
@@ -61,26 +61,26 @@ export default function NewsPage() {
     }
   };
 
-  const updateNewsHandler = () => {
-    void getNews();
-  };
+  const getNews = useCallback(() => {
+    fetchNews().catch((e) => console.log(e));
+  }, []);
 
   useEffect(() => {
-    void getNews();
-  }, []);
+    getNews();
+  }, [getNews]);
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
-      void getNews();
+      getNews();
       return () => clearInterval(updateInterval);
     }, UPDATE_INTERVAL_TIME);
-  }, []);
+  }, [getNews]);
 
   return (
     <section className={cx(styles.list)}>
       <h3>News</h3>
       <Button
-        onClick={updateNewsHandler}
+        onClick={getNews}
         variant={BUTTON_VARIANT_CONTAINED}
         size={BUTTON_SIZE_MEDIUM}
       >
