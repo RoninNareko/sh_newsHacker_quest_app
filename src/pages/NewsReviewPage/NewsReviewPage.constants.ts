@@ -1,5 +1,5 @@
 export const INDEX_PAGE_URL = "/";
-export const REFRESH_STATUS_TEXT = "...refresh";
+export const REFRESH_STATUS_TEXT = "...REFRESH";
 export const LINK_UNDERLINE = "always";
 export const VARIANT_H1 = "h1";
 export const VARIANT_H3 = "h3";

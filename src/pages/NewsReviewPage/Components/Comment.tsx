@@ -1,13 +1,18 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   CommentDataType,
   CommentPropsTypes,
   CommentType,
 } from "./Comment.types";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
 import { Button, Comment } from "semantic-ui-react";
-import { CLEAR_VALUE, HIDE_COMMENT_BUTTON_TEXT } from "./Comment.constants";
+import {
+  CLEAR_VALUE,
+  COMMENT_IMAGE_URL,
+  HIDE_COMMENT_BUTTON_TEXT,
+} from "./Comment.constants";
 
 export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
@@ -18,8 +23,10 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
     try {
       const newsFetchUrl = `${newsItemUrl}${commentID}.json`;
       const commentData: CommentDataType = await axios.get(newsFetchUrl);
+
       const { data } = commentData;
       data.time = new Date(Number(data.time) * 1000);
+
       setComment(data);
     } catch (e) {
       console.log(e);
@@ -35,6 +42,7 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
   const setComments = async (commentID: number) => {
     const moreCommentsFetchUrl = `${newsItemUrl}${commentID}.json`;
     const commentData: CommentDataType = await axios.get(moreCommentsFetchUrl);
+
     const { data } = commentData;
 
     setMoreComments((prevState: [] | CommentType[]) => {
@@ -67,9 +75,9 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
     <>
       <Comment.Group>
         <Comment>
-          <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg" />
+          <Comment.Avatar src={COMMENT_IMAGE_URL} />
           <Comment.Content>
-            <Comment.Author as="a">{comment?.by}</Comment.Author>
+            <Comment.Author>{comment?.by}</Comment.Author>
             <Comment.Metadata>
               <div>
                 {comment

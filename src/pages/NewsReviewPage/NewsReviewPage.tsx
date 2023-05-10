@@ -1,11 +1,11 @@
+import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { NewsDataType, NewsType } from "../NewsPage/NewsPage.types";
-import axios from "axios";
 import { newsItemUrl } from "../NewsPage/NewsPage.constants";
 import { useCallback, useEffect, useState } from "react";
 import classNames from "classnames/bind";
-import styles from "./NewsReviewPage.module.scss";
 import { Button, Link, Typography } from "@mui/material";
+import styles from "./NewsReviewPage.module.scss";
 
 import {
   BACK_BUTTON_TEXT,
@@ -18,15 +18,18 @@ import {
   VARIANT_H3,
   VARIANT_H4,
 } from "./NewsReviewPage.constants";
+
 import { UserComment } from "./Components/Comment";
 import { Header } from "semantic-ui-react";
 
 export function NewsReviewPage() {
-  const navigatie = useNavigate();
   const [news, setNews] = useState<NewsType | undefined>(undefined);
   const [commentsLoading, setCommentsLoading] = useState<true | false>(false);
-  const cx = classNames.bind(styles);
+
+  const navigate = useNavigate();
   const { newsId } = useParams();
+
+  const cx = classNames.bind(styles);
 
   const fetchData = async () => {
     setCommentsLoading(true);
@@ -55,7 +58,7 @@ export function NewsReviewPage() {
   };
 
   const goBack = () => {
-    navigatie(INDEX_PAGE_URL);
+    navigate(INDEX_PAGE_URL);
   };
 
   useEffect(() => {
@@ -106,7 +109,7 @@ export function NewsReviewPage() {
         </Button>
         {!commentsLoading ? (
           news?.kids?.length &&
-          news?.kids?.map((commentID: number) => {
+          news.kids.map((commentID: number) => {
             return <UserComment key={commentID + 1} commentID={commentID} />;
           })
         ) : (

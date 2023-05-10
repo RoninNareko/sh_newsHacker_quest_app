@@ -1,7 +1,11 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 import { Button, List } from "@mui/material";
 import {
   BUTTON_SIZE_MEDIUM,
   BUTTON_VARIANT_CONTAINED,
+  CLEAR_VALUE,
   LOADING_STATUS_TEXT,
   MAX_NEWS_COUNT,
   news_list_sx,
@@ -10,23 +14,22 @@ import {
   UPDATE_INTERVAL_TIME,
 } from "./NewsPage.constants";
 
-import { useEffect, useState } from "react";
+import { NewsDataType, NewsIdTypes, NewsType } from "./NewsPage.types";
+import News from "./components/News/News";
 
 import classNames from "classnames/bind";
 import styles from "./NewsPage.module.scss";
 
-import axios from "axios";
-import { NewsDataType, NewsIdTypes, NewsType } from "./NewsPage.types";
-import News from "./components/News/News";
-
 export default function NewsPage() {
-  const cx = classNames.bind(styles);
-
   const [news, setNews] = useState<[] | NewsType[]>([]);
   const [loading, setLoading] = useState<true | false>(false);
 
+  const cx = classNames.bind(styles);
+
   const getNews = async () => {
     setLoading(true);
+    setNews(CLEAR_VALUE);
+
     try {
       const newsIdData: NewsIdTypes = await axios.get(topStoriesUrl);
 
@@ -37,6 +40,7 @@ export default function NewsPage() {
 
         const { data } = newsData;
         data.time = new Date(Number(data.time) * 1000);
+
         setNews((prevState: [] | NewsType[]) => {
           const found = prevState.find((el) => el.id === data.id);
 
@@ -49,6 +53,7 @@ export default function NewsPage() {
           return prevState;
         });
       });
+
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -82,7 +87,7 @@ export default function NewsPage() {
       </Button>
       {news && !loading ? (
         <List sx={news_list_sx}>
-          {news?.map((newsData: NewsType) => (
+          {news.map((newsData: NewsType) => (
             <News newsData={newsData} key={newsData.id} />
           ))}
         </List>

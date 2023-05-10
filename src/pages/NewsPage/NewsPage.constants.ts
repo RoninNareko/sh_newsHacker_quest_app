@@ -12,6 +12,7 @@ export const MAX_NEWS_COUNT = 100;
 
 export const UPDATE_INTERVAL_TIME = 60000;
 
-export const LOADING_STATUS_TEXT = "...loading";
+export const LOADING_STATUS_TEXT = "...LOADING";
 export const BUTTON_VARIANT_CONTAINED = "contained";
 export const BUTTON_SIZE_MEDIUM = "medium";
+export const CLEAR_VALUE = [];
