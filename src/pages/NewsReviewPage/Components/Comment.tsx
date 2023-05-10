@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { newsItemUrl } from "../../NewsPage/NewsPage.constants";
 import { Button, Comment } from "semantic-ui-react";
-import { HIDE_COMMENT_BUTTON_TEXT } from "./Comment.constants";
+import { CLEAR_VALUE, HIDE_COMMENT_BUTTON_TEXT } from "./Comment.constants";
 
 export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
   const [comment, setComment] = useState<CommentType | undefined>(undefined);
@@ -49,7 +49,9 @@ export function UserComment({ commentID, moreComment }: CommentPropsTypes) {
   };
 
   const LoadMoreComments = async (more: boolean) => {
+    setMoreComments(CLEAR_VALUE);
     setShowMoreComments(!showMoreComments);
+
     try {
       if (more && !moreComments.length) {
         moreComment?.kids?.map(setComments);

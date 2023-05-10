@@ -5,14 +5,11 @@ export interface CommentPropsTypes {
 
 export interface CommentType {
   by: string;
-
   id: number;
-
   parent: number;
   kids: number[] | undefined | [];
   text: string;
   time: Date;
-
   type: string;
 }
 

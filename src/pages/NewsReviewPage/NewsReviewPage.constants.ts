@@ -1,5 +1,4 @@
 export const INDEX_PAGE_URL = "/";
-export const LOADING_STATUS_TEXT = "...laoding";
 export const REFRESH_STATUS_TEXT = "...refresh";
 export const LINK_UNDERLINE = "always";
 export const VARIANT_H1 = "h1";
