@@ -68,8 +68,8 @@ export default function NewsPage() {
   useEffect(() => {
     const updateInterval = setInterval(() => {
       fetchNews();
-      return () => clearInterval(updateInterval);
     }, UPDATE_INTERVAL_TIME);
+    return () => clearInterval(updateInterval);
   }, [fetchNews]);
 
   return (
