@@ -27,12 +27,16 @@
   font-size: 30px !important;
 }
 
+
+@media (max-width: 1030px) {
+  .backButton {
+    position: relative !important;
+  }
+}
+
 @media (max-width: 720px) {
   .newsPageCnt {
     display: block !important;
   }
 
-  .backButton {
-    position: relative !important;
-  }
 }
