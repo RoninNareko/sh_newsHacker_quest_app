@@ -33,7 +33,9 @@ export default function NewsPage() {
     try {
       const newsIdData: NewsIdTypes = await axios.get(topStoriesUrl);
 
-      newsIdData.data.slice(0, MAX_NEWS_COUNT).map(async (newsID: number) => {
+      const { data } = newsIdData;
+
+      data.slice(0, MAX_NEWS_COUNT).map(async (newsID: number) => {
         const newsFetchUrl = `${newsItemUrl}${newsID}.json`;
 
         const newsData: NewsDataType = await axios.get(newsFetchUrl);
@@ -53,8 +55,6 @@ export default function NewsPage() {
           return prevState;
         });
       });
-
-      setLoading(false);
     } catch (e) {
       setLoading(false);
       console.log(e);
@@ -64,6 +64,12 @@ export default function NewsPage() {
   useEffect(() => {
     fetchNews();
   }, [fetchNews]);
+
+  useEffect(() => {
+    if (news.length === MAX_NEWS_COUNT) {
+      setLoading(false);
+    }
+  }, [news.length]);
 
   useEffect(() => {
     const updateInterval = setInterval(() => {
